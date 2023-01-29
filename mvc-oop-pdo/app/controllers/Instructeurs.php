@@ -22,14 +22,17 @@ class Instructeurs extends Controller
         foreach ($result as $instructeurinfo) {
             $dateTimeObj =
                 new DateTimeImmutable(
-                    $instructeurinfo->Instructeur,
+                    $instructeurinfo->DatumInDienst,
                     new DateTimeZone('Europe/Amsterdam')
                 );
             // var_dump($dateTimeObj);
-            $rows .= "<tr>
+            $rows .=  "<tr>
+                        <td>{$instructeurinfo->INNA}</td>
+                        <td>{$instructeurinfo->INTU}</td>
+                        <td>{$instructeurinfo->INAC}</td>
+                        <td>{$instructeurinfo->INMO}</td>
                         <td>{$dateTimeObj->format('d-m-Y')}</td>
-                        <td>{$instructeurinfo->MANK}</td>
-
+                        <td>{$instructeurinfo->INAA}</td>
                       </tr>";
         }
 

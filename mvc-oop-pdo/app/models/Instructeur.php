@@ -17,19 +17,17 @@ class Instructeur
 
     public function getInstructeurs()
     {
-        $this->db->query("SELECT Id 
-                                ,Voornaam 
-                                ,Tussenvoegsel 
-                                ,Achternaam 
-                                ,Mobiel 
-                                ,DatumInDienst
-                                ,Aantalsterren 
+        $this->db->query("SELECT instructeur.Id 
+                                ,instructeur.Voornaam AS INNA
+                                ,instructeur.Tussenvoegsel AS INTU
+                                ,instructeur.Achternaam AS INAC
+                                ,instructeur.Mobiel AS INMO
+                                ,instructeur.DatumInDienst 
+                                ,instructeur.Aantalsterren AS INAA
                           FROM instructeur 
-                          WHERE instructeur.Id = :Id
                           ORDER BY Instructeur.Aantalsterren DESC
                         ");
 
-        $this->db->bind(':Id', 2, PDO::PARAM_INT);
 
         return $this->db->resultSet();
     }

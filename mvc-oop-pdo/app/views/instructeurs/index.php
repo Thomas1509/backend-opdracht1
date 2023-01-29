@@ -1,4 +1,5 @@
 <h3><?= $data['title']; ?></h3>
+<h3>Aantal instructeurs: <?= $data['aantal']; ?></h3>
 
 
 <table border="1">

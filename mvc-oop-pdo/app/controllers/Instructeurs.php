@@ -19,6 +19,7 @@ class Instructeurs extends Controller
 
         $rows = "";
 
+
         foreach ($result as $instructeurinfo) {
             $dateTimeObj =
                 new DateTimeImmutable(
@@ -34,12 +35,15 @@ class Instructeurs extends Controller
                         <td>{$dateTimeObj->format('d-m-Y')}</td>
                         <td>{$instructeurinfo->INAA}</td>
                       </tr>";
-        }
+
+                    }
 
 
         $data = [
             'title' => 'Instructeurs in dienst',
             'rows' => $rows,
+            'aantal' => count($result)
+
         ];
         $this->view('instructeurs/index', $data);
     }

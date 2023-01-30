@@ -17,7 +17,7 @@ class Instructeur
 
     public function getInstructeurs()
     {
-        $this->db->query("SELECT instructeur.Id 
+        $this->db->query("SELECT instructeur.Id AS INID
                                 ,instructeur.Voornaam AS INNA
                                 ,instructeur.Tussenvoegsel AS INTU
                                 ,instructeur.Achternaam AS INAC
@@ -32,26 +32,44 @@ class Instructeur
         return $this->db->resultSet();
     }
 
-    // public function getTopics($mankementId)
-    // {
-    //     // Maak je query
-    //     $sql = "SELECT Mankement.Datum
-    //                   ,Mankement.Id
-    //                   ,Mankement.Mankement
-    //             FROM Mankement
-    //             INNER JOIN Auto
-    //             ON Auto.Id = Mankement.AutoId
-    //             WHERE Mankement.Id = :mankementId";
+    public function getInstructeurById($Id) 
+    {
+        $sql = "SELECT  instructeur.Voornaam
+                        ,instructeur.Tussenvoegsel
+                        ,instructeur.Achternaam
+                        ,instructeur.DatumInDienst
+                        ,instructeur.AantalSterren
+                        FROM instructeur 
+                        WHERE Id = :Id;";
+        $this->db->query($sql);
+        $this->db->bind(':Id', $Id, PDO::PARAM_INT);
+        $result = $this->db->single();
+        return $result;
+    }
 
-    //     // Prepareer je query
-    //     $this->db->query($sql);
+    public function getGebruikteVoertuigen($Id) 
+    {
+        $sql = "SELECT   typevoertuig.TypeVoertuig
+                        ,typevoertuig.Rijbewijscategorie
+                        ,voertuig.Type
+                        ,voertuig.Kenteken
+                        ,voertuig.Bouwjaar
+                        ,voertuig.Brandstof
 
-    //     // Bind de echte waarde aan de placeholder
-    //     $this->db->bind(':mankementId', $mankementId, PDO::PARAM_INT);
-
-    //     // Haal je resultaat op en return deze.
-    //     return $this->db->resultSet();
-    // }
+                FROM    Instructeur
+                INNER JOIN voertuiginstructeur
+                ON         voertuiginstructeur.InstructeurId = Instructeur.Id
+                INNER JOIN Voertuig
+                ON         voertuiginstructeur.VoertuigId = voertuig.Id
+                INNER JOIN typevoertuig
+                ON         voertuig.TypeVoertuigId = typevoertuig.Id
+                WHERE   instructeur.Id = :Id
+                ORDER BY typevoertuig.Rijbewijscategorie ASC";
+        $this->db->query($sql);
+        $this->db->bind(':Id', $Id, PDO::PARAM_INT);
+        $result = $this->db->resultSet();
+        return $result;
+    }
 
     // public function addMankement($post)
     // {

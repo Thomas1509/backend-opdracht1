@@ -34,6 +34,10 @@ class Instructeurs extends Controller
                         <td>{$instructeurinfo->INMO}</td>
                         <td>{$dateTimeObj->format('d-m-Y')}</td>
                         <td>{$instructeurinfo->INAA}</td>
+                        <td>
+                            <a href='" . URLROOT . "/instructeurs/gebruikteVoertuigen/{$instructeurinfo->INID}'>
+                            <img src='" . URLROOT . "/img/b_sbrowse.png' alt='table picture'>
+                        </td>
                       </tr>";
 
                     }
@@ -48,39 +52,43 @@ class Instructeurs extends Controller
         $this->view('instructeurs/index', $data);
     }
 
-    // public function topicmankementen($id = NULL)
-    // {
-    //     // Roep de modelmethod getTopics aan
-    //     $result = $this->mankementModel->getTopics($id);
-
-    //     if ($result) {
-    //         $dt = new DateTimeImmutable($result[0]->Datum, new DateTimeZone('Europe/Amsterdam'));
-    //         $date = $dt->format('d-m-Y');
-    //         $time = $dt->format('H:i');
-    //     } else {
-    //         $date = "";
-    //         $time = "";
-    //     }
-
-    //     $rows = "";
-
-    //     foreach ($result as $topic) {
-
-    //         $rows .= "<tr>
-    //                     <td>{$topic->Mankement}</td>
-    //                   </tr>";
-    //     }
-
-
-    //     $data = [
-    //         'title' => 'Onderwerpen mankement',
-    //         'rows' => $rows,
-    //         'date' => $date,
-    //         'time' => $time,
-    //         'mankementenId' => $id
-    //     ];
-    //     $this->view('mankementen/index', $data);
-    // }
+    public function gebruikteVoertuigen($Id) 
+    {
+      $instructeur = $this->instructeurModel->getInstructeurById($Id);
+  
+      $gebruikteVoertuigen = $this->instructeurModel->getGebruikteVoertuigen($Id);
+  
+      if (sizeOf($gebruikteVoertuigen) == 0 ) {
+          $rows = "<tr><td colspan='6'>Er zijn op dit moment nog geen voertuigen toegewezen aan deze instructeur</td></tr>";
+          header('Refresh:3; url=' . URLROOT . '/instructeurs/index');
+      } else {
+          $rows = '';
+          foreach ($gebruikteVoertuigen as $value){
+          $rows .= "<tr>
+                      <td>$value->TypeVoertuig</td>
+                      <td>$value->Type</td>
+                      <td>$value->Kenteken</td>
+                      <td>$value->Bouwjaar</td>
+                      <td>$value->Brandstof</td>
+                      <td>$value->Rijbewijscategorie</td>
+                    </tr>";
+          }
+      }
+      
+  
+      $data = [
+          'title' => 'Door Instructeur gebruikte voertuigen',
+          'voornaam' => $instructeur->Voornaam,
+          'tussenvoegsel' => $instructeur->Tussenvoegsel,
+          'achternaam' => $instructeur->Achternaam,
+          'datumInDienst' => $instructeur->DatumInDienst,
+          'aantalSterren' => $instructeur->AantalSterren,
+          'rows' =>$rows
+      ];
+  
+      $this->view('/instructeurs/gebruikteVoertuigen', $data);
+    }
+  }
 
     // public function addMankement()
     // {
@@ -115,4 +123,4 @@ class Instructeurs extends Controller
     //         $this->view('mankementen/addMankement', $data);
     //     }
     // }
-}
+
